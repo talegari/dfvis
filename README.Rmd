@@ -1,0 +1,60 @@
+---
+title: "dfvis"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, fig.width = 12, fig.height = 8)
+```
+
+**WIP: IN DEVELOPMENT**
+
+#### A ggplot2 based implementation of tabplot ([github repo](https://github.com/mtennekes/tabplot), [paper](http://www.jds-online.com/file_download/379/JDS-1108.pdf))
+
+tabplot offers a fast way to eyeball dataframes (my go-to tool over years). This uncovers possible interactions between variables when sorted by some variable. Hence, it builds intuition for any further modeling.
+
+## What is different from tabplot
+
+- Adds out-of-box support for grouped tibbles (tidy dataframes)
+- Based on ggplot for flexible geoms for different variable types
+- dfvis might not be as fast as tabplot
+
+## Illustrations
+
+```{r}
+pacman::p_load("dplyr", "tabplot", "dfvis")
+```
+
+```{r}
+data("attrition", package = "modeldata")
+attrition = as_tibble(attrition)
+attrition_6 = attrition[, 1:6]
+skimr::skim(attrition_6)
+```
+
+### Ungrouped case
+
+```{r}
+autoplot(attrition_6, sort_column_name = "DistanceFromHome")
+```
+
+### Grouped Case
+
+```{r}
+suppressWarnings(
+  attrition_6 %>% 
+    group_by(Attrition) %>% 
+    autoplot(sort_column_name = "DistanceFromHome")
+  )
+```
+
+### tabplot
+
+```{r}
+tabplot::tableplot(attrition_6, sortCol = "DistanceFromHome", nBins = 10)
+```
+
+## Development and Contribution
+
+- Contributions are welcome!
+- Create interactive version (with shiny?)
